@@ -1,0 +1,451 @@
+<!-- <!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>FWI Prediction</title>
+
+        <style>
+
+            *{
+                margin:0;
+                padding:0;
+                box-sizing: border-box;
+                font-family: Arial, sans-serif;
+            }
+
+            body{
+                background: linear-gradient(135deg, #1d2671, #c33764);
+                min-height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .login{
+                background: white;
+                padding:30px;
+                border-radius: 15px;
+                width: 90%;
+                max-width: 450px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+                text-align: center;
+            }
+
+            .login h1{
+                margin-bottom: 20px;
+                color: #333;
+            }
+
+            input{
+                width: 100%;
+                padding: 12px;
+                margin: 8px 0;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                font-size: 15px;
+            }
+
+            input:focus{
+                outline: none;
+                border-color: #1d2671;
+            }
+
+            button{
+                width: 100%;
+                padding: 12px;
+                margin-top: 15px;
+                border: none;
+                border-radius: 8px;
+                background: #1d2671;
+                color: white;
+                font-size: 16px;
+                cursor: pointer;
+                transition: 0.3s;
+            }
+
+            button:hover{
+                background: #c33764;
+            }
+
+            .result{
+                margin-top: 20px;
+                font-size: 20px;
+                color: green;
+                font-weight: bold;
+            }
+
+            @media (max-width: 480px) {
+                .login{
+                    padding:20px;
+                }
+
+                .login h1{
+                    font-size:22px;
+                }
+
+                input{
+                    padding:10px;
+                    font-size:14px;
+                }
+
+                button{
+                    font-size:14px;
+                }
+
+                .result{
+                    font-size:18px;
+                }
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="login">
+            <h1>Forest Fire Weather Index Prediction</h1>
+
+            <!-- Main Input For Receiving Query To Our ML-->
+             <!-- <form action="/" method="post">
+                <input type="text" name="Temperature" placeholder="Temperature" required="required" /><br>
+                <input type="text" name="RH" placeholder="RH" required="required" /><br>
+                <input type="text" name="Ws" placeholder="Ws" required="required" /><br>
+                <input type="text" name="Rain" placeholder="Rain" required="required" /><br>
+                <input type="text" name="FFMC" placeholder="FFMC" required="required" /><br>
+                <input type="text" name="DMC" placeholder="DMC" required="required" /><br>
+                <input type="text" name="ISI" placeholder="ISI" required="required" /><br>
+                <input type="text" name="Classes" placeholder="Classes" required="required" /><br>
+                <input type="text" name="Region" placeholder="Region" required="required" /><br>
+
+
+                <button type="submit" class="btn btn-primary btn-block btn-large">Predict</button>
+             </form>
+             <div class="result">
+                The FWI prediction is {{results}}
+             </div>
+        </div>
+    </body>
+</html> --> -->
+
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>FWI Prediction</title>
+
+        <style>
+
+            *{
+                margin:0;
+                padding:0;
+                box-sizing:border-box;
+                font-family:"Segoe UI", Arial, sans-serif;
+            }
+
+            body{
+                min-height:100vh;
+                display:flex;
+                justify-content:center;
+                align-items:center;
+                padding:30px 15px;
+
+                background:
+                    radial-gradient(circle at top left, #00c6ff 0%, transparent 35%),
+                    radial-gradient(circle at bottom right, #ff4b7d 0%, transparent 35%),
+                    linear-gradient(135deg, #0f172a, #1e1b4b);
+
+                background-size:200% 200%;
+                animation:backgroundMove 10s ease infinite;
+            }
+
+            @keyframes backgroundMove{
+                0%{
+                    background-position:0% 50%;
+                }
+
+                50%{
+                    background-position:100% 50%;
+                }
+
+                100%{
+                    background-position:0% 50%;
+                }
+            }
+
+            .login{
+                width:90%;
+                max-width:500px;
+
+                padding:35px;
+
+                border-radius:25px;
+
+                background:rgba(255,255,255,0.12);
+                border:1px solid rgba(255,255,255,0.25);
+
+                backdrop-filter:blur(18px);
+                -webkit-backdrop-filter:blur(18px);
+
+                box-shadow:
+                    0 25px 60px rgba(0,0,0,0.35),
+                    inset 0 1px 1px rgba(255,255,255,0.2);
+
+                text-align:center;
+
+                animation:cardAppear 0.8s ease;
+            }
+
+            @keyframes cardAppear{
+                from{
+                    opacity:0;
+                    transform:translateY(30px) scale(0.95);
+                }
+
+                to{
+                    opacity:1;
+                    transform:translateY(0) scale(1);
+                }
+            }
+
+            .login h1{
+                margin-bottom:28px;
+
+                color:#ffffff;
+
+                font-size:28px;
+                font-weight:700;
+                line-height:1.3;
+
+                text-shadow:0 3px 10px rgba(0,0,0,0.25);
+            }
+
+            form{
+                width:100%;
+            }
+
+            input{
+                width:100%;
+
+                padding:14px 16px;
+                margin:7px 0;
+
+                border:none;
+                outline:none;
+
+                border-radius:12px;
+
+                background:rgba(255,255,255,0.92);
+                color:#1f2937;
+
+                font-size:15px;
+                font-weight:500;
+
+                border:2px solid transparent;
+
+                transition:
+                    border 0.3s ease,
+                    box-shadow 0.3s ease,
+                    transform 0.3s ease,
+                    background 0.3s ease;
+            }
+
+            input::placeholder{
+                color:#6b7280;
+            }
+
+            input:hover{
+                background:#ffffff;
+                transform:translateY(-1px);
+            }
+
+            input:focus{
+                background:#ffffff;
+
+                border-color:#38bdf8;
+
+                box-shadow:
+                    0 0 0 4px rgba(56,189,248,0.18),
+                    0 8px 20px rgba(0,0,0,0.12);
+
+                transform:translateY(-2px);
+            }
+
+            button{
+                width:100%;
+
+                padding:14px;
+                margin-top:20px;
+
+                border:none;
+                border-radius:12px;
+
+                background:linear-gradient(
+                    135deg,
+                    #06b6d4,
+                    #2563eb
+                );
+
+                color:white;
+
+                font-size:16px;
+                font-weight:700;
+
+                letter-spacing:0.5px;
+
+                cursor:pointer;
+
+                box-shadow:
+                    0 8px 20px rgba(37,99,235,0.35);
+
+                transition:
+                    transform 0.3s ease,
+                    box-shadow 0.3s ease,
+                    background 0.3s ease;
+            }
+
+            button:hover{
+                background:linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #7c3aed
+                );
+
+                transform:translateY(-3px);
+
+                box-shadow:
+                    0 12px 28px rgba(37,99,235,0.5);
+            }
+
+            button:active{
+                transform:translateY(0);
+            }
+
+            .result{
+                margin-top:25px;
+
+                padding:15px;
+
+                border-radius:12px;
+
+                background:rgba(34,197,94,0.15);
+
+                border:1px solid rgba(74,222,128,0.35);
+
+                color:#bbf7d0;
+
+                font-size:20px;
+                font-weight:700;
+
+                text-shadow:0 2px 8px rgba(0,0,0,0.2);
+
+                animation:resultAppear 0.6s ease;
+            }
+
+            @keyframes resultAppear{
+                from{
+                    opacity:0;
+                    transform:scale(0.95);
+                }
+
+                to{
+                    opacity:1;
+                    transform:scale(1);
+                }
+            }
+
+            /* Small decorative glow */
+            .login::before{
+                content:"";
+
+                position:absolute;
+
+                width:120px;
+                height:120px;
+
+                background:rgba(56,189,248,0.25);
+
+                border-radius:50%;
+
+                filter:blur(40px);
+
+                pointer-events:none;
+            }
+
+            /* Mobile Design */
+            @media (max-width:480px){
+
+                body{
+                    padding:20px 10px;
+                }
+
+                .login{
+                    width:100%;
+                    padding:25px 20px;
+                    border-radius:20px;
+                }
+
+                .login h1{
+                    font-size:22px;
+                    margin-bottom:22px;
+                }
+
+                input{
+                    padding:12px 14px;
+                    font-size:14px;
+                }
+
+                button{
+                    padding:12px;
+                    font-size:15px;
+                }
+
+                .result{
+                    font-size:17px;
+                }
+            }
+
+        </style>
+    </head>
+
+    <body>
+
+        <div class="login">
+
+            <h1>🔥 Forest Fire Weather Index Prediction</h1>
+
+            <!-- Main Input For Receiving Query To Our ML-->
+            <form action="/" method="post">
+
+                <input type="text" name="Temperature" placeholder="Temperature" required="required" /><br>
+
+                <input type="text" name="RH" placeholder="RH" required="required" /><br>
+
+                <input type="text" name="Ws" placeholder="Ws" required="required" /><br>
+
+                <input type="text" name="Rain" placeholder="Rain" required="required" /><br>
+
+                <input type="text" name="FFMC" placeholder="FFMC" required="required" /><br>
+
+                <input type="text" name="DMC" placeholder="DMC" required="required" /><br>
+
+                <input type="text" name="ISI" placeholder="ISI" required="required" /><br>
+
+                <input type="text" name="Classes" placeholder="Classes" required="required" /><br>
+
+                <input type="text" name="Region" placeholder="Region" required="required" /><br>
+
+                <button type="submit" class="btn btn-primary btn-block btn-large">
+                    🔥 Predict FWI
+                </button>
+
+            </form>
+
+            <div class="result">
+                The FWI prediction is {{results}}
+            </div>
+
+        </div>
+
+    </body>
+</html>
